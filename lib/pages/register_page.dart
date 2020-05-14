@@ -12,6 +12,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: MyColors.colorGreen1,
@@ -67,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _emailTextEditing() {
     return TextField(
+      controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         enabledBorder: _inputBorder,
@@ -78,6 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _nameTextEditing() {
     return TextField(
+      controller: _nameController,
       decoration: InputDecoration(
         enabledBorder: _inputBorder,
         focusedBorder: _inputBorder,
@@ -88,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _passwordTextEditing() {
     return TextField(
+      controller: _passController,
       obscureText: _hidePass,
       decoration: InputDecoration(
         enabledBorder: _inputBorder,
@@ -113,7 +120,9 @@ class _RegisterPageState extends State<RegisterPage> {
         shape: StadiumBorder(),
         textColor: Colors.white,
         color: MyColors.colorGreen2,
-        onPressed: () {},
+        onPressed: () {
+          // TODO: verify, send data and go to home
+        },
         child: Text('SIGN UP'),
       ),
     );

@@ -10,6 +10,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final PageController _controller = PageController(initialPage: 0);
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+
 
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
@@ -70,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _emailTextEditing() {
     return TextField(
+      controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         enabledBorder: _inputBorder,
@@ -81,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _passwordTextEditing() {
     return TextField(
+      controller: _passController,
       obscureText: _hidePass,
       decoration: InputDecoration(
         enabledBorder: _inputBorder,
@@ -107,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
         textColor: Colors.white,
         color: MyColors.colorGreen2,
         onPressed: () {
+          // TODO: validate data y rest data
           Navigator.pushNamed(context, 'home');
         },
         child: Text('LOG IN'),

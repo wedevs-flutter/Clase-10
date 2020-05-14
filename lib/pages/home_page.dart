@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             ItemList(
-              quote: 'Esto es una frase super chevere',
+              quoteText: 'Esto es una frase super chevere',
             )
           ],
         ),
