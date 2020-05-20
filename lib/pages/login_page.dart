@@ -123,10 +123,9 @@ class _LoginPageState extends State<LoginPage> {
                   _statusBtn(true);
                 else {
                   await _doLogin()
-                      // ? Navigator.of(context).pushNamedAndRemoveUntil(
-                      ? Navigator.of(context).pushNamed(
+                      ? Navigator.of(context).pushNamedAndRemoveUntil(
                           'home',
-                          // (route) => false,
+                          (route) => false,
                         )
                       : _statusBtn(true);
                 }
