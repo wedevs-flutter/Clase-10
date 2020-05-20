@@ -112,4 +112,25 @@ class RestProvider {
     } else
       return false;
   }
+
+  Future<bool> deleteQuote(Quote quote) async {
+    String url = '$_baseUrl/quote/deleteQuote/${quote.id}';
+    String userToken = await _prefs.getDataString(KeyList.TOKEN);
+
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'token': userToken,
+    };
+
+    http.Response resp = await http.delete(
+      url,
+      headers: header,
+    );
+
+    if (resp.statusCode == 200) {
+      print(resp.body);
+      return true;
+    } else
+      return false;
+  }
 }

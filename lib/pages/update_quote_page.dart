@@ -58,6 +58,13 @@ class _UpdateQuotePageState extends State<UpdateQuotePage> {
               Navigator.of(context).pop();
           },
         ),
+        IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () async {
+            bool status = await _restProvider.deleteQuote(quote);
+            if (status) Navigator.of(context).pop();
+          },
+        ),
       ],
     );
   }
