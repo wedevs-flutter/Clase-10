@@ -3,6 +3,7 @@ import 'package:quote_character/pages/home_page.dart';
 import 'package:quote_character/pages/login_page.dart';
 import 'package:quote_character/pages/quote_page.dart';
 import 'package:quote_character/pages/register_page.dart';
+import 'package:quote_character/pages/update_quote_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         'register': (context) => RegisterPage(),
         'home': (context) => HomePage(),
         'quote': (context) => QuotePage(),
+        'update_quote': (context) => UpdateQuotePage(),
       },
     );
   }

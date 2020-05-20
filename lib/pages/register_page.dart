@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quote_character/models/user.dart';
+import 'package:quote_character/providers/rest_provider.dart';
 import 'package:quote_character/utils/my_colors.dart';
 import 'package:quote_character/widgets/background.dart';
 
@@ -15,6 +17,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
+  final _provider = RestProvider();
+
+  bool _hidePass = true;
+  bool _activateBtn = true;
 
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
@@ -23,7 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
     ),
     borderRadius: BorderRadius.circular(20),
   );
-  bool _hidePass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +125,24 @@ class _RegisterPageState extends State<RegisterPage> {
         shape: StadiumBorder(),
         textColor: Colors.white,
         color: MyColors.colorGreen2,
-        onPressed: () {
-          // TODO: verify, send data and go to home
-        },
+        onPressed: _activateBtn
+            ? () async {
+                _statusBtn(false);
+                if (_emailController.text.isEmpty ||
+                    _passController.text.isEmpty ||
+                    _nameController.text.isEmpty)
+                  _statusBtn(true);
+                else {
+                  await _doRegister()
+                      ? widget.controller.animateToPage(
+                          0,
+                          duration: Duration(seconds: 1),
+                          curve: Curves.fastOutSlowIn,
+                        )
+                      : _statusBtn(true);
+                }
+              }
+            : null,
         child: Text('SIGN UP'),
       ),
     );
@@ -144,5 +164,23 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Text('I have an account'),
       ),
     );
+  }
+
+  void _statusBtn(bool status) {
+    setState(() {
+      _activateBtn = status;
+    });
+  }
+
+  Future<bool> _doRegister() async {
+    User user = User(
+      name: _nameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passController.text.trim(),
+    );
+    _nameController.clear();
+    _emailController.clear();
+    _passController.clear();
+    return await _provider.registerUser(user);
   }
 }
