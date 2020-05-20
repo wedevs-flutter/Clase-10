@@ -5,13 +5,13 @@ enum KeyList { USER_ID, USER_NAME, TOKEN }
 class PreferenceProvider {
   SharedPreferences _prefs;
 
-  Future<bool> saveDataString(KeyList key, String value) async {
+  Future<bool> saveDataString(String key, String value) async {
     _prefs = await SharedPreferences.getInstance();
-    return await _prefs.setString(key.toString(), value);
+    return await _prefs.setString(key, value);
   }
 
-  Future<String> getDataString(KeyList key) async {
+  Future<String> getDataString(String key) async {
     _prefs = await SharedPreferences.getInstance();
-    return _prefs.getString(key.toString());
+    return _prefs.getString(key);
   }
 }

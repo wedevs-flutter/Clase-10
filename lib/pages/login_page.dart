@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quote_character/models/user.dart';
 import 'package:quote_character/pages/register_page.dart';
-import 'package:quote_character/providers/rest_provider.dart';
 import 'package:quote_character/utils/my_colors.dart';
 import 'package:quote_character/widgets/background.dart';
 
@@ -11,13 +9,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _pageController = PageController(initialPage: 0);
+  final PageController _controller = PageController(initialPage: 0);
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
-  final _provider = RestProvider();
 
-  bool _hidePass = true;
-  bool _activateBtn = true;
 
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
@@ -26,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
     ),
     borderRadius: BorderRadius.circular(20),
   );
+  bool _hidePass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     final EdgeInsets viewInsets = MediaQuery.of(context).viewInsets;
     return Scaffold(
       body: PageView(
-        controller: _pageController,
+        controller: _controller,
         scrollDirection: Axis.vertical,
         children: <Widget>[
           Container(
@@ -51,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          RegisterPage(controller: _pageController),
+          RegisterPage(controller: _controller),
         ],
       ),
     );
@@ -115,22 +111,10 @@ class _LoginPageState extends State<LoginPage> {
         shape: StadiumBorder(),
         textColor: Colors.white,
         color: MyColors.colorGreen2,
-        onPressed: _activateBtn
-            ? () async {
-                _statusBtn(false);
-                if (_emailController.text.isEmpty ||
-                    _passController.text.isEmpty)
-                  _statusBtn(true);
-                else {
-                  await _doLogin()
-                      ? Navigator.of(context).pushNamedAndRemoveUntil(
-                          'home',
-                          (route) => false,
-                        )
-                      : _statusBtn(true);
-                }
-              }
-            : null,
+        onPressed: () {
+          // TODO: validate data y rest data
+          Navigator.pushNamed(context, 'home');
+        },
         child: Text('LOG IN'),
       ),
     );
@@ -139,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _textCreateAccount() {
     return GestureDetector(
       onTap: () {
-        _pageController.animateToPage(
+        _controller.animateToPage(
           1,
           duration: Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
@@ -152,21 +136,5 @@ class _LoginPageState extends State<LoginPage> {
         child: Text('Create account'),
       ),
     );
-  }
-
-  void _statusBtn(bool status) {
-    setState(() {
-      _activateBtn = status;
-    });
-  }
-
-  Future<bool> _doLogin() async {
-    User user = User(
-      email: _emailController.text.trim(),
-      password: _passController.text.trim(),
-    );
-    _emailController.clear();
-    _passController.clear();
-    return await _provider.loginUser(user);
   }
 }
