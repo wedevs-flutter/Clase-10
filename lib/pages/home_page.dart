@@ -30,8 +30,7 @@ class _HomePageState extends State<HomePage> {
                 return ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) => ItemList(
-                    quoteImage: list[index].image,
-                    quoteText: list[index].quote,
+                    quote: list[index],
                   ),
                 );
               }

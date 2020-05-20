@@ -9,7 +9,7 @@ class ImageConverter {
     return Image.memory(
       base64Decode(base64String),
       fit: BoxFit.cover,
-      height: 100,
+      height: 250,
     );
   }
 
