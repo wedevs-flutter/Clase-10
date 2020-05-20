@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:quote_character/models/quote.dart';
 import 'package:quote_character/models/user.dart';
 import 'package:quote_character/providers/preferences_provider.dart';
 
@@ -42,6 +43,19 @@ class RestProvider {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<List<Quote>> getAllQuotes() async {
+    String url = '$_baseUrl/quote';
+    http.Response resp = await http.get(url, headers: _headerJson);
+    if (resp.statusCode == 200) {
+      List<dynamic> json = jsonDecode(resp.body);
+      List<Quote> list = List<Quote>.from(json.map((e) => Quote.fromJson(e)));
+      print(list.length);
+      return list;
+    } else {
+      return [];
     }
   }
 }
