@@ -22,4 +22,14 @@ class Quote {
     this.author = json['author'];
     this.authorId = json['authorId'];
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'quote': this.quote,
+      'character': this.character,
+      'image': this.image,
+      'author': this.author,
+      'authorId': this.authorId,
+    };
+  }
 }

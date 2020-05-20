@@ -58,4 +58,31 @@ class RestProvider {
       return [];
     }
   }
+
+  Future<bool> createNewQuote(Quote quote) async {
+    String url = '$_baseUrl/quote/createQuote';
+    String userToken = await _prefs.getDataString(KeyList.TOKEN);
+    String userName = await _prefs.getDataString(KeyList.USER_NAME);
+    String userId = await _prefs.getDataString(KeyList.USER_ID);
+
+    quote.author = userName;
+    quote.authorId = userId;
+
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'token': userToken,
+    };
+
+    http.Response resp = await http.post(
+      url,
+      headers: header,
+      body: jsonEncode(quote.toJson()),
+    );
+
+    if (resp.statusCode == 200) {
+      print(resp.body);
+      return true;
+    } else
+      return false;
+  }
 }
