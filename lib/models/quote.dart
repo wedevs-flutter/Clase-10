@@ -1,4 +1,5 @@
 class Quote {
+  String id;
   String quote;
   String character;
   String image;
@@ -14,6 +15,7 @@ class Quote {
   });
 
   Quote.fromJson(Map<String, dynamic> json) {
+    this.id = json['_id'];
     this.quote = json['quote'];
     this.character = json['character'];
     this.image = json['image'];

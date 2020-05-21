@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: {
         'login': (context) => LoginPage(),
         'register': (context) => RegisterPage(),
