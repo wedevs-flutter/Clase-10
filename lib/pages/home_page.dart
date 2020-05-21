@@ -31,8 +31,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: list.length,
                   itemBuilder: (context, index) {
                     return ItemList(
-                      quoteImage: list[index].image,
-                      quoteText: list[index].quote,
+                      quote: list[index],
                     );
                   },
                 );

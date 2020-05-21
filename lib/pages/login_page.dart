@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quote_character/models/user.dart';
 import 'package:quote_character/pages/register_page.dart';
+import 'package:quote_character/providers/rest_provider.dart';
 import 'package:quote_character/utils/my_colors.dart';
 import 'package:quote_character/widgets/background.dart';
 
@@ -13,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
+  final _restProvider = RestProvider();
 
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
@@ -111,9 +114,22 @@ class _LoginPageState extends State<LoginPage> {
         shape: StadiumBorder(),
         textColor: Colors.white,
         color: MyColors.colorGreen2,
-        onPressed: () {
-          // TODO: validate data y rest data
-          Navigator.pushNamed(context, 'home');
+        onPressed: () async {
+          if (_emailController.text.isNotEmpty &&
+              _passController.text.isNotEmpty) {
+            bool resp = await _login();
+            if (resp)
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                'home',
+                (route) => false,
+              );
+            else {
+              _emailController.clear();
+              _passController.clear();
+            }
+            //  Navigator.pushNamed(context, 'home');
+
+          }
         },
         child: Text('LOG IN'),
       ),
@@ -136,5 +152,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Text('Create account'),
       ),
     );
+  }
+
+  Future<bool> _login() async {
+    User user = User(
+      email: _emailController.text.trim(),
+      password: _passController.text.trim(),
+    );
+    return await _restProvider.loginUser(user);
   }
 }

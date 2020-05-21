@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quote_character/models/user.dart';
+import 'package:quote_character/providers/rest_provider.dart';
 import 'package:quote_character/utils/my_colors.dart';
 import 'package:quote_character/widgets/background.dart';
 
@@ -16,6 +18,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
+  final _restProvider = RestProvider();
+
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: MyColors.colorGreen1,
@@ -24,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
     borderRadius: BorderRadius.circular(20),
   );
   bool _hidePass = true;
+  bool _activateBtn = true;
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +125,25 @@ class _RegisterPageState extends State<RegisterPage> {
         shape: StadiumBorder(),
         textColor: Colors.white,
         color: MyColors.colorGreen2,
-        onPressed: () {
-          // TODO: verify, send data and go to home
-        },
-        child: Text('SIGN UP'),
+        onPressed: _activateBtn
+            ? () async {
+                if (_nameController.text.isEmpty ||
+                    _emailController.text.isEmpty ||
+                    _passController.text.isEmpty) {
+                  print('erro al llenar los datos');
+                } else {
+                  _activateBtn = false;
+                  setState(() {});
+                  await _register();
+                  widget.controller.animateToPage(
+                    0,
+                    duration: Duration(seconds: 1),
+                    curve: Curves.fastOutSlowIn,
+                  );
+                }
+              }
+            : null,
+        child: Text(_activateBtn ? 'SIGN UP' : 'WAIT'),
       ),
     );
   }
@@ -144,5 +164,14 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Text('I have an account'),
       ),
     );
+  }
+
+  Future<bool> _register() async {
+    User user = User(
+      name: _nameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passController.text.trim(),
+    );
+    return await _restProvider.registerUser(user);
   }
 }
