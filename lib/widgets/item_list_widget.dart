@@ -25,7 +25,7 @@ class ItemList extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               _bgColor(Colors.black),
-              _quoteText(quote.quote),
+              _quoteText(quote.quote, quote.author),
             ],
           ),
         ),
@@ -39,20 +39,36 @@ class ItemList extends StatelessWidget {
     );
   }
 
-  Widget _quoteText(String quote) {
+  Widget _quoteText(String quote, String author) {
     return Container(
       padding: EdgeInsets.all(16),
       child: Center(
-        child: Text(
-          '"$quote"',
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontStyle: FontStyle.italic,
-            fontSize: 17,
-            color: Colors.white,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              '"$quote"',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '"$author"',
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );

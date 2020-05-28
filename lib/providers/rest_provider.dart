@@ -98,15 +98,41 @@ class RestProvider {
       'token': await _prefs.getDataString(KeyList.TOKEN),
     };
     http.Response resp = await http.delete(url, headers: _header);
-    if(resp.statusCode == 200){
+    if (resp.statusCode == 200) {
       print('delete quote');
       print(resp.body);
       return true;
-    }else{
+    } else {
       print('delete quote fail');
       print(resp.body);
       return false;
     }
   }
 
+  Future<bool> updateQuote(Quote quote) async {
+    quote.quote = 'Frase modificada desde el metodo';
+
+    String url = '$_baseUrl/quote/updateQuote/${quote.id}';
+
+    Map<String, String> _header = {
+      'Content-Type': 'application/json',
+      'token': await _prefs.getDataString(KeyList.TOKEN),
+    };
+
+    http.Response resp = await http.put(
+      url,
+      headers: _header,
+      body: jsonEncode(quote.toJson()),
+    );
+
+    if (resp.statusCode == 200) {
+      print('update quote');
+      print(resp.body);
+      return true;
+    } else {
+      print('update quote fail');
+      print(resp.body);
+      return false;
+    }
+  }
 }

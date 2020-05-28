@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quote_character/models/quote.dart';
+import 'package:quote_character/providers/preferences_provider.dart';
 import 'package:quote_character/providers/rest_provider.dart';
 import 'package:quote_character/utils/my_colors.dart';
 import 'package:quote_character/widgets/item_list_widget.dart';
@@ -10,7 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  RestProvider _provider = RestProvider();
+  RestProvider _provRest = RestProvider();
+  PreferenceProvider _provPrefs = PreferenceProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +22,35 @@ class _HomePageState extends State<HomePage> {
         onRefresh: () async {
           setState(() {});
         },
-        child: FutureBuilder<List<Quote>>(
-          future: _provider.getAllQuotes(),
-          builder: (context, AsyncSnapshot snapshot) {
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: _getAllData(),
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-                List<Quote> list = snapshot.data;
+                List<Quote> list = snapshot.data['list'];
+                String userId = snapshot.data['userId'];
                 // pintar datos
                 return ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    return ItemList(
-                      quote: list[index],
+                    return GestureDetector(
+                      child: ItemList(quote: list[index]),
+                      onTap: (list[index].authorId == userId)
+                          ? () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35),
+                                  topRight: Radius.circular(35),
+                                )),
+                                builder: (context) {
+                                  return _contentBottomSheet(
+                                      context, list[index]);
+                                },
+                              );
+                            }
+                          : null,
                     );
                   },
                 );
@@ -53,5 +72,49 @@ class _HomePageState extends State<HomePage> {
       child: Icon(Icons.add),
       backgroundColor: MyColors.colorGreen1,
     );
+  }
+
+  Widget _contentBottomSheet(BuildContext context, Quote quote) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            title: Text('Delete'),
+            leading: Icon(Icons.delete_forever),
+            onTap: () async {
+              bool resp = await _provRest.deleteQuote(quote);
+              if (resp) {
+                setState(() {
+                  Navigator.of(context).pop();
+                });
+              }
+            },
+          ),
+          ListTile(
+            title: Text('Update'),
+            leading: Icon(Icons.update),
+            onTap: () async {
+              bool resp = await _provRest.updateQuote(quote);
+              if (resp) {
+                setState(() {
+                  Navigator.of(context).pop();
+                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> _getAllData() async {
+    List<Quote> list = await _provRest.getAllQuotes();
+    String userId = await _provPrefs.getDataString(KeyList.USER_ID);
+    return {
+      'list': list,
+      'userId': userId,
+    };
   }
 }
